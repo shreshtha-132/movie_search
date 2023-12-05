@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:movie_search/components/BuildListTile.dart';
+import 'package:movie_search/screens/search.dart';
 
 class Home extends StatefulWidget {
   static String id = 'Home';
@@ -32,10 +32,15 @@ class _HomeState extends State<Home> {
     }
   }
 
+  Future<void> initData() async {
+    await getData();
+    setState(() {});
+  }
+
   @override
   void initState() {
-    // TODO: implement initState
-    getData();
+    super.initState();
+    initData();
   }
 
   @override
@@ -56,7 +61,6 @@ class _HomeState extends State<Home> {
                     suffixIcon: IconButton(
                       icon: Icon(Icons.clear),
                       onPressed: () {
-                        // Clear the search field
                         _searchController.clear();
                       },
                     ),
@@ -64,6 +68,11 @@ class _HomeState extends State<Home> {
                       icon: Icon(Icons.search),
                       onPressed: () {
                         //TODO: add search functionality
+                        String searchText = _searchController.text.trim();
+                        if (searchText.isNotEmpty) {
+                          Navigator.pushNamed(context, Search.id,
+                              arguments: {'searchText': searchText});
+                        }
                       },
                     )),
               ),
@@ -77,7 +86,7 @@ class _HomeState extends State<Home> {
                     show: show,
                   );
                 },
-              ), //build a vertical scrollable builder here
+              ),
             ),
           ],
         ),
